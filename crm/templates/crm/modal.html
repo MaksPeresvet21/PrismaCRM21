@@ -1,0 +1,23 @@
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="false" data-bs-focus="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">!!!Попередження!!!</h1>
+      </div>
+      <div class="modal-body">
+        Видалення цих даних призведе до видалення пов'язаних замовлень та порушення аналітичних взаємодій!
+      </div>
+      <div class="modal-footer">
+        <a type="button" id="deleteButton" class="btn btn-outline-light" href="#">Видалити</a>
+        <a type="button" class="btn btn-light" data-bs-dismiss="modal">Закрити</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    function setDeleteUrl(url) {
+        var deleteButton = document.getElementById('deleteButton');
+        deleteButton.setAttribute('href', url);
+    }
+</script>

@@ -1,0 +1,107 @@
+{% extends 'crm/main.html' %}
+{% block content %}
+
+<div class="d-flex justify-content-lg-center justify-content-md-center justify-content-sm-center text-center mb-3">
+  <div class="col-lg-7 col-md-7 col-sm-8">
+    <form action="{% url 'contacts' %}" method="GET">
+      <div class="input-group search">
+        <input type="text" class="form-control" name="search" id="id_search" placeholder="Пошук...">
+          <input class="btn btn-dark" type="submit" value="Знайти" />
+          <a class="btn btn-outline-success" href="{% url 'contacts' %}" type="button">Оновити</a>
+      </div>
+    </form>
+  </div>
+    {% for group in request.user.groups.all %}
+    {% if group.name == 'hometown'%}
+        <div class="col-lg-3 col-md-3 col-sm-3 text-end mx-2">
+            <button class="btn btn-success form_btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" onclick="OpenForm({% url 'add_seller' %})">+Контакт</button>
+        </div>
+    {% endif %}
+    {% endfor %}
+</div>
+{% for group in request.user.groups.all %}
+{% if group.name == 'hometown'%}
+<div class="d-flex justify-content-between">
+{% else %}
+<div class="d-flex justify-content-lg-center  justify-content-sm-start">
+{% endif %}
+{% endfor %}
+    <div class="row">
+      <div class="col-7">
+        <table class="my-table table-contact text-center">
+          <thead>
+            <tr class="text-center">
+                <th colspan='4' scope="col" class="main-cont">Клієнт</th>
+            </tr>
+            <tr class="text-center">
+                <th scope="col">ПІБ</th>
+                <th scope="col">Телефон</th>
+                <th scope="col">Адреса</th>
+                <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for c in customers %}
+            <tr>
+                <td>{{ c.name }}</td>
+                <td><a href="tel:{{ c.phone }}">{{ c.phone }}</a></td>
+                <td>{{ c.address }}</td>
+                <td>
+                  <a type="button" class="ml-2 btn btn-sm btn-dark" href="{% url 'customer_orders' c.id %}">
+                      <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-eye" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+                          <path fill-rule="evenodd" d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/></svg>
+                  </a>
+                </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+{% for group in request.user.groups.all %}
+  {% if group.name == 'hometown'%}
+    <div class="row">
+        <div class="col-5">
+          <table class="my-table table-contact mx-3 text-center">
+              <thead>
+                <tr class="text-center">
+                    <th colspan='4' scope="col" class="main-cont">Продавець</th>
+                </tr>
+                  <tr class="text-center">
+                    <th scope="col">Логін</th>
+                    <th scope="col">Им'я</th>
+                    <th scope="col">Телефон</th>
+                    <th scope="col">Дія</th>
+                  </tr>
+              </thead>
+                <tbody class="text-center">
+                {% for s in sellers %}
+                <tr>
+                    <td>{{ s.username }}</td>
+                    <td>{{ s.first_name }}</td>
+                    <td><a href="tel:{{ s.phone }}">{{ s.phone }}</a></td>
+                    <td>
+                      <a class="btn btn-sm btn-dark" href="{% url 'seller_orders' s.id %}">
+                          <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-eye" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+                              <path fill-rule="evenodd" d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/></svg>
+                      </a>
+                      <a class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="setDeleteUrl('{% url 'delete_seller' s.id %}')">
+                          <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" /></svg>
+                      </a>
+                      {% include 'crm/modal.html' %}
+                    </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endfor %}
+{% endblock content %}

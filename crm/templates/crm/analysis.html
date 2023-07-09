@@ -1,0 +1,44 @@
+{% extends 'crm/main.html' %}
+{% block content %}
+    <div class="d-flex justify-content-start text-center">
+    <div class="col-4 text-end">
+        {% if request.POST and 'cancel' in request.POST %}
+            <span class="badge badge-col">Повернення заказів: <br>-{{ total_orders  }}.од</span>
+        {% else %}
+           <span class="badge badge-col">Кількість заказів: <br>{{ total_orders }}.од</span>
+        {% endif %}
+    </div>
+    <div class="col-2 mx-2">
+        {% if request.POST and 'cancel' in request.POST %}
+            <span class="badge badge-col">Повернення товару: <br>-{{ total_amount  }}.од</span>
+        {% else %}
+           <span class="badge badge-col">Кількість товару: <br>{{ total_amount }}.од</span>
+        {% endif %}
+    </div>
+    <div class="col-2 mx-2 text-start">
+        {% if request.POST and 'cancel' in request.POST %}
+            <span class="badge badge-col">Повернення: <br><strong class="text-danger">-{{ orders_sum }}</strong>.грн</span>
+        {% else %}
+           <span class="badge badge-col">КАСА: <br><strong class="text-success">{{ orders_sum }}</strong>.грн</span>
+        {% endif %}
+    </div>
+    <div class="col-auto align-self-end mb-2">
+      <form method="POST">
+          {% csrf_token %}
+            <button class="btn btn-dark" type="submit" name="cancel">Повернення</button>
+            <a class="btn btn-outline-success mx-2" href="{% url 'analysis' %}" type="button">Оновити</a>
+      </form>
+    </div>
+    </div>
+
+<div>
+  <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+    В Розробці
+  </a>
+</div>
+    <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+             Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
+    </div>
+    </div>
+{% endblock content %}

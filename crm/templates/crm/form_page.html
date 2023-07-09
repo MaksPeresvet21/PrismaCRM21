@@ -1,0 +1,17 @@
+{% load static %}
+<form action={{ from_url }} method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form.as_p}}
+    <div id="liveAlertPlaceholder"></div>
+    <div class="d-flex justify-content-end">
+    <button type="submit" name="Submit" value="Submit" id="liveAlertBtn" class="btn btn-success col-6 m-3">Зберегти</button>
+    </div>
+</form>
+
+{% block javascript %}
+    <script src="{% static 'crmsell/js/errors.js' %}"></script>
+    <script src="{% static 'crmsell/js/delivery.js' %}"></script>
+    <script src="{% static 'crmsell/js/new_post.js' %}"></script>
+{% endblock javascript %}
+
+
