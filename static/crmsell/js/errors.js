@@ -12,13 +12,17 @@ $(document).on('submit', 'form', function(event) {
     event.preventDefault();
     var form = $(this);
 
+    var formData = new FormData(form[0]);
+
     $.ajax({
         url: form.attr('action'),
         type: 'POST',
-        data: form.serialize(),
+        data: formData,
+        processData: false,
+        contentType: false,
         success: function(response) {
             if (response.success) {
-                location.reload();
+                window.location.reload();
             } else {
                 var errorMessage = response.errors;
                 appendAlert(errorMessage, 'dark');

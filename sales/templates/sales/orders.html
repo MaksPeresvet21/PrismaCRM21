@@ -1,27 +1,15 @@
-{% extends 'crm/main.html' %}
+{% extends 'sales/main.html' %}
 {% block content %}
 
 <div class="d-flex justify-content-lg-end justify-content-md-start justify-content-sm-start text-center">
     <div class="col-lg-4 col-md-4 col-sm text-end">
-        {% if request.POST and 'cancel' in request.POST %}
-            <span class="badge badge-col">Повернення заказів: <br>-{{ total_orders  }}.од</span>
-        {% else %}
            <span class="badge badge-col">Кількість заказів: <br>{{ total_orders }}.од</span>
-        {% endif %}
     </div>
     <div class="col-lg-2 col-md-3 col-sm mx-2">
-        {% if request.POST and 'cancel' in request.POST %}
-            <span class="badge badge-col">Повернення товару: <br>-{{ total_amount  }}.од</span>
-        {% else %}
            <span class="badge badge-col">Кількість товару: <br>{{ total_amount }}.од</span>
-        {% endif %}
     </div>
     <div class="col-lg-2 col-md-3 col-sm mx-2 text-start">
-        {% if request.POST and 'cancel' in request.POST %}
-            <span class="badge badge-col">Повернення: <br>-{{ total_margin  }}.грн</span>
-        {% else %}
            <span class="badge badge-col"> КАСА: <br>{{ total_margin }}.грн</span>
-        {% endif %}
     </div>
     <div class="col-2 text-end align-self-end">
         <button class="m-3 btn btn-success form_btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" onclick="OpenForm({% url 'create_order' %})">+Заказ</button>

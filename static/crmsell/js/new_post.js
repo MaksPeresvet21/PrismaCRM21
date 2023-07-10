@@ -1,5 +1,5 @@
 const url = 'https://api.novaposhta.ua/v2.0/json/';
-const apiKey = 'your Api';
+const apiKey = 'Your API';
 let cities = [];
 let citiesRef = [];
 

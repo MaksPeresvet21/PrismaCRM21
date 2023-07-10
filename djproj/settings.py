@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'crm',
+    'sales',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django_filters',
 
 ]
-AUTH_USER_MODEL = 'crm.Seller'
+AUTH_USER_MODEL = 'sales.Seller'
 
 NOVAPOSHTA_API_SETTINGS = {
     'api_key': 'fc5584eb01a9ff27ea35f964fb94bc64',

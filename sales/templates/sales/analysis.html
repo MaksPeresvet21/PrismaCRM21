@@ -1,0 +1,63 @@
+{% extends 'sales/main.html' %}
+{% block content %}
+{% load static %}
+
+<div class="d-flex justify-content-between">
+    <div class="d-flex ms-2">
+        {% if losses == 'return' %}
+           <span class="badge badge-col badge-return mx-2">Кількість заказів: <br>-{{ total_orders }}.од</span>
+           <span class="badge badge-col badge-return mx-2">Кількість товару: <br>-{{ total_amount }}.од</span>
+           <span class="badge badge-col badge-return mx-2">Повернення: <br><strong class="text-danger">-{{ orders_sum }}</strong>.грн</span>
+           <span class="badge badge-col badge-return mx-2">Втрати: <br><strong class="text-danger">{{ clean_sum }}</strong>.грн</span>
+        {% else %}
+           <span class="badge badge-col mx-2">Кількість заказів: <br>{{ total_orders }}.од</span>
+           <span class="badge badge-col mx-2">Кількість товару: <br>{{ total_amount }}.од</span>
+           <span class="badge badge-col mx-2"> КАСА: <br><strong class="text-success">{{ orders_sum }}</strong>.грн</span>
+           <span class="badge badge-col mx-2">Дохід: <br><strong class="text-success">{{ clean_sum }}</strong>.грн</span>
+        {% endif %}
+    </div>
+    <div class="col-4 text-center align-self-center">
+        <form class="d-flex" method="GET">
+        <div class="form-group">
+            <label for="startDate">ВІД</label>
+            <input class="form-control"  type="date" name="from_date" value="{{ from_date }}">
+        </div>
+        <div class="form-group mx-2">
+            <label for="endDate">ДО</label>
+            <input class="form-control" type="date" name="to_date" value="{{ to_date }}">
+        </div>
+        <button class="btn btn-outline-success align-self-end" type="submit">ОК</button>
+    </form>
+    </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center text-nowrap m-3">
+    <div class="d-flex ">
+        <a class="btn btn-success mx-2" onclick="showProductsChart({{ top_products }})">
+            ТОП Товар
+        </a>
+        <a class="btn btn-success mx-2" onclick="showSellersChart({{ top_sellers }})">
+            ТОП Продавець
+        </a>
+        <a class="btn btn-success mx-2" onclick="showClientsChart({{ top_clients }})">
+            ТОП Клієнт
+        </a>
+        <a class="btn btn-success mx-2" onclick="showCityChart({{ top_city }})">
+            ТОП Місто
+        </a>
+    </div>
+    <div class="d-flex col-auto">
+        <a class="btn btn-dark mx-2" href="?losses=return">Повернення</a>
+        <a class="btn btn-outline-dark" href=".">Оновити</a>
+    </div>
+</div>
+
+<div class="collapse" id="chartCollapse">
+    <div class="{% if losses == 'return' %}chart-return{% else %}chart-top{% endif %} card card-body">
+        <div id="chart_container" style="height: 480px;"></div>
+</div>
+
+{% block javascript %}
+    <script src="{% static 'crmsell/js/analysis.js' %}"></script>
+{% endblock javascript %}
+{% endblock content %}

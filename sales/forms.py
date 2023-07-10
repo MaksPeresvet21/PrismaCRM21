@@ -145,6 +145,10 @@ class Form(forms.ModelForm):
             order.save()
         return order
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['product'].queryset = Product.objects.exclude(amount=0)
+
 
 
 class ProductForm(forms.ModelForm):

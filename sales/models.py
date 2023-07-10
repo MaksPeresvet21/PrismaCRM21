@@ -42,7 +42,7 @@ class Product(models.Model):
 
 class Order(models.Model):
     code_ord = models.CharField(max_length=50, blank=True, null=True)
-    product = models.ForeignKey(Product, related_name='orders_by_product', null=True, on_delete=models.CASCADE,)
+    product = models.ForeignKey(Product, related_name='orders_by_product', null=True, on_delete=models.CASCADE)
     amount = models.IntegerField(null=True)
     sizes = models.CharField(max_length=50, null=True)
     seller = models.ForeignKey(Seller, on_delete=models.CASCADE, null=True, blank=True)
@@ -50,6 +50,7 @@ class Order(models.Model):
     name_client = models.CharField(max_length=50, blank=True, null=True)
     phone_client = models.CharField(max_length=13, blank=True, null=True)
     city_client = models.CharField(max_length=200, blank=True, null=True)
+    region = models.CharField(max_length=200, blank=True, null=True)
     dep_np = models.CharField(max_length=200, blank=True, null=True)
     actual_weight = models.CharField(max_length=10, blank=False, choices=(('1', '1кг.'), ('2', '2кг.'), ('4', '4кг.')), default='1')
     number_ttn = models.CharField(max_length=200, blank=True, null=True)
@@ -58,7 +59,6 @@ class Order(models.Model):
     status = models.CharField(max_length=50, choices=(('Предоплата', 'Предоплата'), ('Повна Оплата', 'Повна Оплата')), default='Предоплата')
     status_code = models.CharField(max_length=10)
     date_created = models.DateTimeField(auto_now_add=True, null=True)
-
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -74,6 +74,7 @@ class Order(models.Model):
                 customer = Customer.objects.get(id=self.customer.id)
                 customer.seller = self.seller
                 customer.save()
+                self.region = self.city_client.split(',')[-1].strip()
         super().save(*args, **kwargs)
 
 

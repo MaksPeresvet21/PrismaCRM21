@@ -1,4 +1,4 @@
-{% extends 'crm/main.html' %}
+{% extends 'sales/main.html' %}
 {% block content %}
 
 <form method="get">
@@ -19,7 +19,7 @@
     </div>
 {% for group in request.user.groups.all %}
     {% if group.name == 'hometown'%}
-    <div class="col-2 align-self-end mx-2">
+    <div class="col-2 align-self-end ms-5">
         <button class="btn btn-success form_btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" onclick="OpenForm({% url 'create_product' %})">+Товар</button>
     </div>
     {% endif %}
@@ -47,7 +47,12 @@
     </thead>
     <tbody class="text-center">
       {% for p in products %}
-      <tr>
+        <tr>
+          {% if p.amount == 0 %}
+            <tr class="overlay-row d-flex justify-content-center">
+                <td>ПРОДАНО</td>
+            </tr>
+          {% endif %}
           <th scope="row">{{ p.code }}</th>
             <td>
                 <button type="button" class="btn" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="right" data-bs-content="<img src='{{ p.img.url }}' alt='Фото' class='popover-image'>">
@@ -80,7 +85,7 @@
               <path fill-rule="evenodd"
                 d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" /></svg>
           </a>
-          {% include 'crm/modal.html' %}
+          {% include 'sales/modal.html' %}
           {% endif %}
       {% endfor %}
           </td>
