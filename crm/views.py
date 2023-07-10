@@ -214,7 +214,7 @@ def create_ttn(request):
         address = re.search(r'(?P<city_type>м\.|смт\.?|с\.?)?\s*(?P<city>[^,]+),?\s*(?P<region>[^,]*?)(?: р-н| міськрада)?,?\s*(?P<area>[^,]+)?\s*обл\.', order.city_client)
         url = 'https://api.novaposhta.ua/v2.0/json/'
         data = {
-            "apiKey": "fc5584eb01a9ff27ea35f964fb94bc64",
+            "apiKey": "your APi",
             "modelName": "InternetDocument",
             "calledMethod": "save",
             "methodProperties": {
@@ -277,7 +277,7 @@ def update_status(request):
         if numbers_ttn:
             url = 'https://api.novaposhta.ua/v2.0/json/'
             data = {
-                "apiKey": "fc5584eb01a9ff27ea35f964fb94bc64",
+                "apiKey": "your APi",
                 "modelName": "TrackingDocument",
                 "calledMethod": "getStatusDocuments",
                 "methodProperties": {
