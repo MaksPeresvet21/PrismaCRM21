@@ -1,17 +1,15 @@
 from django.shortcuts import render, redirect
 from .filters import *
 from .forms import *
-from django.db.models import Q, Sum, F
+from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 import requests
+import datetime
 from django.http import JsonResponse
 from django.urls import reverse
 import re
-import json
-from datetime import datetime, time, date
-from django.utils.timezone import make_aware
 
 status_codes = ['102', '103', '111', '105', '2', '3']
 
@@ -27,7 +25,7 @@ def dashboard(request):
     recent_orders = orders.order_by('-date_created')[:5]
     current_page = 'dashboard'
     context = {'orders': orders, 'status_codes': status_codes, 'recent_orders': recent_orders, 'current_page': current_page}
-    return render(request, 'sales/dashboard.html', context)
+    return render(request, 'crm/dashboard.html', context)
 
 def get_ttn(request):
     ttn_total = Order.objects.filter(status__in=['Предоплата', 'Повна Оплата']).count()
@@ -39,7 +37,7 @@ def products(request):
     products = Product.objects.order_by("-date_created")
     pf = ProductFilter(request.GET, queryset=products)
     products = pf.qs
-    return render(request, 'sales/products.html', {'products':products, 'pf': pf, 'current_page': current_page})
+    return render(request,'crm/products.html',{'products':products, 'pf': pf, 'current_page': current_page})
 
 @login_required
 def delete_product(request, pk):
@@ -58,7 +56,7 @@ def update_product(request, pk):
             form.save()
             return JsonResponse({'success': True})
     context = {'form': form, 'from_url': from_url}
-    return render(request, 'sales/form_page.html', context)
+    return render(request, 'crm/form_page.html', context)
 
 @login_required
 def create_product(request):
@@ -70,7 +68,7 @@ def create_product(request):
             form.save()
             return JsonResponse({'success': True})
     context = {'form': form, 'from_url': from_url}
-    return render(request, 'sales/form_page.html', context)
+    return render(request, 'crm/form_page.html', context)
 
 
 @login_required
@@ -86,7 +84,7 @@ def orders(request):
     total_orders = orders.count()
     context = {'orders':orders, 'total_margin': total_margin, 'total_amount': total_amount,
                 'total_orders': total_orders, 'current_page': current_page, 'status_codes': status_codes}
-    return render(request, 'sales/orders.html', context)
+    return render(request, 'crm/orders.html', context)
 
 
 @login_required
@@ -106,7 +104,7 @@ def create_order(request):
             errors = re.sub(r'\*\s*__all__\s*\*', '', errors)
             return JsonResponse({'success': False, 'errors': errors})
     context = {'form': form, 'from_url': from_url}
-    return render(request, 'sales/form_page.html', context)
+    return render(request, 'crm/form_page.html', context)
 
 
 @login_required
@@ -132,14 +130,14 @@ def contacts(request):
     customers = customer.order_by("-date_created")
     sellers = Seller.objects.order_by("-date_joined")
     context = {'customers':customers, 'sellers': sellers, 'current_page': current_page}
-    return render(request, 'sales/contacts.html', context)
+    return render(request,'crm/contacts.html', context)
 
 @login_required
 def customer_orders(request, pk):
     customer = Customer.objects.get(id=pk)
     order = customer.order_set.all()
     context = {'customer': customer, 'order': order, 'status_codes': status_codes}
-    return render(request, 'sales/customer_orders.html', context)
+    return render(request,'crm/customer_orders.html', context)
 
 
 @login_required
@@ -147,6 +145,8 @@ def seller_orders(request, pk):
     current_page = "orders"
     seller = Seller.objects.get(id=pk)
     orders = Order.objects.filter(seller=seller)
+    if request.method == 'POST' and 'cancel' in request.POST:
+            orders = orders.filter(status_code__in=status_codes)
     if request.GET.get('refresh') == 'true':
         return redirect('seller_orders', pk=pk)
     total_margin = sum([o.margin for o in orders])
@@ -155,7 +155,7 @@ def seller_orders(request, pk):
     context = {'seller': seller, 'orders': orders, 'current_page': current_page,
                'total_orders': total_orders, 'total_margin': total_margin,
                'status_codes': status_codes, 'total_amount': total_amount}
-    return render(request, 'sales/orders.html', context)
+    return render(request, 'crm/orders.html', context)
 
 @login_required
 def add_seller(request):
@@ -171,52 +171,28 @@ def add_seller(request):
             errors = re.sub(r'\*\s*(username|password2)\s*\*', '', errors)
             return JsonResponse({'success': False, 'errors': errors})
     context = {'form': form, 'from_url': from_url}
-    return render(request, "sales/form_page.html", context)
+    return render(request, "crm/form_page.html", context)
 
 def delete_seller(request, pk):
     contact = Seller.objects.get(id=pk)
     contact.delete()
     return redirect(request.META.get('HTTP_REFERER'))
 
-
-
-
-def get_top(orders):
-    top_products_data = Order.objects.filter(id__in=orders).values('product__name').annotate(total_sum=Sum(F('amount') * F('product__cost')), total_amount=Sum('amount')).order_by('-total_sum')[:10]
-    top_sellers_data = Order.objects.filter(id__in=orders).values('seller__username').annotate(total_sum=Sum(F('amount') * F('product__cost')), total_amount=Sum('amount'), margin=Sum('margin')).order_by('-total_sum')
-    top_clients_data = Order.objects.filter(id__in=orders).exclude(status='САМОВИВІЗ').values('customer__name').annotate(total_sum=Sum(F('amount') * F('product__cost')), total_amount=Sum('amount')).order_by('-total_sum')[:10]
-    top_city_data = Order.objects.filter(id__in=orders).exclude(status='САМОВИВІЗ').values('region').annotate(total_sum=Sum(F('amount') * F('product__cost')), total_amount=Sum('amount')).order_by('-total_sum')[:10]
-    top_products, top_sellers, top_clients, top_city = [['Продукт', 'Дохід', 'Кількість']], [['Продавець', 'Дохід', 'Кількість', 'Маржа']], [['Клієнт', 'Дохід', 'Кількість']], [['Рег', 'Дохід', 'Кількість', 'Регіон']]
-    top_products.extend([[product['product__name'], product['total_sum'], product['total_amount']] for product in top_products_data])
-    top_sellers.extend([[seller['seller__username'], seller['total_sum'], seller['total_amount'], seller['margin']] for seller in top_sellers_data])
-    top_clients.extend([[client['customer__name'], client['total_sum'], client['total_amount']] for client in top_clients_data])
-    top_city.extend([[city['region'][:4], city['total_sum'], city['total_amount'], city['region']] for city in top_city_data])
-    return top_products, top_sellers, top_clients, top_city
-
 @login_required
 def analysis(request):
     current_page = "analysis"
-    orders = Order.objects.all()
-    losses = request.GET.get('losses')
-    from_date = request.GET.get('from_date')
-    to_date = request.GET.get('to_date')
-    if not to_date:
-        to_date = date.today().strftime('%Y-%m-%d')
-    if from_date:
-        orders = orders.filter(date_created__range=[make_aware(datetime.combine(datetime.strptime(from_date, '%Y-%m-%d').date(), time.min)),
-                                                    make_aware(datetime.combine(datetime.strptime(to_date, '%Y-%m-%d').date(), time.max))])
-    if losses == 'return':
-        orders = orders.filter(status_code__in=status_codes)
-
-    top_products, top_sellers, top_clients, top_city = get_top(orders)
-    orders_sum = sum([o.sum for o in orders])
-    clean_sum = int(sum([o.amount * o.product.cost for o in orders ]))
+    if request.method == 'POST' and 'cancel' in request.POST:
+        orders = Order.objects.filter(status_code__in=status_codes)
+    else:
+        orders = Order.objects.all()
+    orders_sum = int(sum([o.amount * o.product.cost for o in orders]))
     total_amount = sum([o.amount for o in orders])
     total_orders = orders.count()
-    context = {'current_page': current_page, 'total_orders': total_orders, 'orders_sum': orders_sum, 'clean_sum': clean_sum,
-               'total_amount': total_amount, 'losses': losses, 'from_date': from_date, 'to_date': to_date,
-               'top_products': top_products, 'top_sellers': top_sellers, 'top_clients': top_clients, 'top_city': top_city}
-    return render(request, 'sales/analysis.html', context)
+    recent_orders = orders.order_by('-date_created')[:5]
+    context = {'orders_sum': orders_sum,  'status_codes': status_codes, 'products': products,
+               'recent_orders': recent_orders, 'total_amount': total_amount,
+               'total_orders': total_orders, 'current_page': current_page}
+    return render(request, 'crm/analysis.html', context)
 
 
 
@@ -234,11 +210,11 @@ def create_ttn(request):
     if request.method == 'POST':
         order_id = request.POST.get('order_id')
         order = Order.objects.get(id=order_id)
-        now_datetime = datetime.now().strftime('%d.%m.%Y')
+        now_datetime = datetime.datetime.now().strftime('%d.%m.%Y')
         address = re.search(r'(?P<city_type>м\.|смт\.?|с\.?)?\s*(?P<city>[^,]+),?\s*(?P<region>[^,]*?)(?: р-н| міськрада)?,?\s*(?P<area>[^,]+)?\s*обл\.', order.city_client)
         url = 'https://api.novaposhta.ua/v2.0/json/'
         data = {
-            "apiKey": "Your API",
+            "apiKey": "fc5584eb01a9ff27ea35f964fb94bc64",
             "modelName": "InternetDocument",
             "calledMethod": "save",
             "methodProperties": {
@@ -301,7 +277,7 @@ def update_status(request):
         if numbers_ttn:
             url = 'https://api.novaposhta.ua/v2.0/json/'
             data = {
-                "apiKey": "Your API",
+                "apiKey": "fc5584eb01a9ff27ea35f964fb94bc64",
                 "modelName": "TrackingDocument",
                 "calledMethod": "getStatusDocuments",
                 "methodProperties": {
@@ -335,7 +311,7 @@ def signin(request):
             return redirect('home')
         else:
             messages.info(request,"Нікнейм або пароль не вірний.")
-    return render(request, 'sales/signin.html', {})
+    return render(request, 'crm/signin.html', {})
 
 def signout(request):
     logout(request)
