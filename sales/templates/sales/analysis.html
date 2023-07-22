@@ -5,12 +5,12 @@
 <div class="d-flex justify-content-between">
     <div class="d-flex ms-2">
         {% if losses == 'return' %}
-           <span class="badge badge-col badge-return mx-2">Кількість заказів: <br>-{{ total_orders }}.од</span>
+           <span class="badge badge-col badge-return mx-2">Кількість замовлень: <br>-{{ total_orders }}.од</span>
            <span class="badge badge-col badge-return mx-2">Кількість товару: <br>-{{ total_amount }}.од</span>
            <span class="badge badge-col badge-return mx-2">Повернення: <br><strong class="text-danger">-{{ orders_sum }}</strong>.грн</span>
-           <span class="badge badge-col badge-return mx-2">Втрати: <br><strong class="text-danger">{{ clean_sum }}</strong>.грн</span>
+           <span class="badge badge-col badge-return mx-2">Втрати: <br><strong class="text-danger">-{{ clean_sum }}</strong>.грн</span>
         {% else %}
-           <span class="badge badge-col mx-2">Кількість заказів: <br>{{ total_orders }}.од</span>
+           <span class="badge badge-col mx-2">Кількість замовлень: <br>{{ total_orders }}.од</span>
            <span class="badge badge-col mx-2">Кількість товару: <br>{{ total_amount }}.од</span>
            <span class="badge badge-col mx-2"> КАСА: <br><strong class="text-success">{{ orders_sum }}</strong>.грн</span>
            <span class="badge badge-col mx-2">Дохід: <br><strong class="text-success">{{ clean_sum }}</strong>.грн</span>

@@ -56,9 +56,9 @@ class SellerForm(UserCreationForm):
 
 class Form(forms.ModelForm):
     code_ord = forms.CharField(required=False, label='КОД Продукту',
-                               widget=forms.TextInput(attrs={'class': "form-control form-control-sm"}))
+                               widget=forms.TextInput(attrs={'class': "form-control form-control-sm", 'id': "code_ord"}))
     product = forms.ModelChoiceField(queryset=Product.objects.all(), label='Назва Продукту', required=False,
-                                     empty_label="Виберіть назву продукту", widget=forms.Select(attrs={'class': "form-select form-select-sm filter-forms"}))
+                                     empty_label="Виберіть назву продукту", widget=forms.Select(attrs={'class': "form-select form-select-sm filter-forms", 'id': "product"}))
     delivery = forms.ChoiceField(label='Доставка', choices=(('pickup', 'САМОВИВІЗ'), ('NP', 'НОВА ПОШТА')),
                                  widget=forms.RadioSelect(attrs={'id': "delivery"}), initial='pickup')
 
