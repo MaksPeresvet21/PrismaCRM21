@@ -28,7 +28,7 @@ body{
 
 a {
     text-decoration: none;
-    color: rgb(34, 52, 42);
+    color: rgb(0, 0, 0);
     transition: font-size 0.3s ease;
 }
 
@@ -194,7 +194,7 @@ li {
 }
 
 label{
-    color: rgb(54, 86, 67);
+    color: rgb(0, 0, 0);
 }
 
 .ui-autocomplete {
