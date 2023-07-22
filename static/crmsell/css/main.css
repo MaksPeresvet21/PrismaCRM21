@@ -8,7 +8,8 @@ body{
     background: rgba(83, 152, 123, 0.12);
     border: 2px solid rgba(147, 203, 148, 0.43);
     box-shadow: 7px 8px 4px rgba(81, 92, 81, 0.25);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 }
 
 #offcanvasRight {
@@ -17,6 +18,7 @@ body{
     border: 2px solid rgba(147, 203, 148, 0.43);
     box-shadow: 7px 8px 4px rgba(81, 92, 81, 0.25);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(12px);
 }
 
 .main-btn:hover{
@@ -124,6 +126,7 @@ li {
     font-size: 35px;
     border: 1px solid rgba(54, 206, 67, 0.82);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 
@@ -209,6 +212,7 @@ label{
     border: 2px solid rgba(147, 203, 148, 0.43);
     box-shadow: 7px 8px 4px rgba(81, 92, 81, 0.25);
     backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 }
 
 
@@ -227,11 +231,12 @@ label{
 
 .modal-content {
     font-size: 17px;
-    background: rgba(211, 30, 30, 0.47);
+    background: rgba(140, 14, 14, 0.4);
     color: #e1fae1;
     border: 2px solid rgba(147, 203, 148, 0.43);
     box-shadow: 7px 8px 4px rgba(81, 92, 81, 0.25);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .form-check-input {
@@ -250,6 +255,7 @@ label{
     background: linear-gradient(231.21deg, rgba(255, 206, 206, 0.29) 7.12%, rgba(189, 236, 175, 0.16) 89.7%);
     box-shadow: 7px 8px 4px rgba(81, 92, 81, 0.25);
     backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 }
 
 .login-form h4 {
@@ -278,6 +284,7 @@ label{
     border: 1px solid #1ad01d;
     backdrop-filter: blur(12px);
     margin-bottom: 10px;
+    -webkit-backdrop-filter: blur(12px);
 }
 
 .chart-return {

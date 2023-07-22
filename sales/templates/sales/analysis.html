@@ -8,7 +8,7 @@
            <span class="badge badge-col badge-return mx-2">Кількість замовлень: <br>-{{ total_orders }}.од</span>
            <span class="badge badge-col badge-return mx-2">Кількість товару: <br>-{{ total_amount }}.од</span>
            <span class="badge badge-col badge-return mx-2">Повернення: <br><strong class="text-danger">-{{ orders_sum }}</strong>.грн</span>
-           <span class="badge badge-col badge-return mx-2">Втрати: <br><strong class="text-danger">{{ clean_sum }}</strong>.грн</span>
+           <span class="badge badge-col badge-return mx-2">Втрати: <br><strong class="text-danger">-{{ clean_sum }}</strong>.грн</span>
         {% else %}
            <span class="badge badge-col mx-2">Кількість замовлень: <br>{{ total_orders }}.од</span>
            <span class="badge badge-col mx-2">Кількість товару: <br>{{ total_amount }}.од</span>

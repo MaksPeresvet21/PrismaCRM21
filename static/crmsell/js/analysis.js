@@ -32,9 +32,6 @@ function showProductsChart(data) {
             textStyle: {bold: true}
         },
         focusTarget: 'category',
-        tooltip: {
-            isHtml: true
-        },
     }, generalOptions);
     toggleChartCollapse('chart_column');
     chart.draw(dataTable, options);
